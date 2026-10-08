@@ -14,7 +14,7 @@ class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
   void _showLogoutDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text(AppStrings.logoutConfirmTitle),
@@ -40,7 +40,7 @@ class SettingsView extends StatelessWidget {
   }
 
   void _showDeleteAccountDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text(AppStrings.deleteAccount),
@@ -67,11 +67,11 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clinic = SeedData.clinic;
+    const clinic = SeedData.clinic;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.settings, style: AppTypography.titleLarge),
+        title: const Text(AppStrings.settings, style: AppTypography.titleLarge),
       ),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
@@ -114,7 +114,7 @@ class SettingsView extends StatelessWidget {
                                 horizontal: 8,
                                 vertical: 2,
                               ),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: AppColors.primaryLight,
                                 borderRadius: AppRadius.roundedFull,
                               ),
@@ -135,7 +135,7 @@ class SettingsView extends StatelessWidget {
                 const SizedBox(height: AppSpacing.lg),
 
                 // Clinic Information
-                Text(AppStrings.clinicProfile, style: AppTypography.titleMedium),
+                const Text(AppStrings.clinicProfile, style: AppTypography.titleMedium),
                 const SizedBox(height: AppSpacing.sm),
                 AppCard(
                   padding: const EdgeInsets.all(AppSpacing.md),
@@ -186,7 +186,7 @@ class SettingsView extends StatelessWidget {
                 const SizedBox(height: AppSpacing.lg),
 
                 // System & Privacy Settings
-                Text('Uygulama & Yasal', style: AppTypography.titleMedium),
+                const Text('Uygulama & Yasal', style: AppTypography.titleMedium),
                 const SizedBox(height: AppSpacing.sm),
                 AppCard(
                   padding: EdgeInsets.zero,
@@ -209,10 +209,10 @@ class SettingsView extends StatelessWidget {
                         },
                       ),
                       const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.info_outline_rounded,
+                      const ListTile(
+                        leading: Icon(Icons.info_outline_rounded,
                             color: AppColors.slateDark),
-                        title: const Text('Sürüm'),
+                        title: Text('Sürüm'),
                         trailing: Text('v1.0.0 (1)', style: AppTypography.bodySmall),
                       ),
                     ],

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -28,11 +29,11 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
-    context.read<AppointmentsCubit>().loadAppointments(date: _selectedDate);
+    unawaited(context.read<AppointmentsCubit>().loadAppointments(date: _selectedDate));
   }
 
   void _openCreateAppointment() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (ctx) => CreateAppointmentDialog(
         initialDate: _selectedDate,
@@ -64,7 +65,7 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
   }
 
   void _openDetailSheet(Appointment appointment) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -88,7 +89,7 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.appointments, style: AppTypography.titleLarge),
+        title: const Text(AppStrings.appointments, style: AppTypography.titleLarge),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.md),
@@ -126,13 +127,16 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
                       _selectedDate =
                           _selectedDate.subtract(const Duration(days: 1));
                     });
-                    context
-                        .read<AppointmentsCubit>()
-                        .loadAppointments(date: _selectedDate);
+                    unawaited(
+                      context
+                          .read<AppointmentsCubit>()
+                          .loadAppointments(date: _selectedDate),
+                    );
                   },
                 ),
                 InkWell(
                   onTap: () async {
+                    final cubit = context.read<AppointmentsCubit>();
                     final picked = await showDatePicker(
                       context: context,
                       initialDate: _selectedDate,
@@ -140,13 +144,11 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
                       lastDate: DateTime.now().add(const Duration(days: 365)),
                       locale: const Locale('tr', 'TR'),
                     );
-                    if (picked != null) {
+                    if (picked != null && mounted) {
                       setState(() {
                         _selectedDate = picked;
                       });
-                      context
-                          .read<AppointmentsCubit>()
-                          .loadAppointments(date: _selectedDate);
+                      unawaited(cubit.loadAppointments(date: picked));
                     }
                   },
                   borderRadius: AppRadius.roundedSm,
@@ -179,9 +181,11 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
                       _selectedDate =
                           _selectedDate.add(const Duration(days: 1));
                     });
-                    context
-                        .read<AppointmentsCubit>()
-                        .loadAppointments(date: _selectedDate);
+                    unawaited(
+                      context
+                          .read<AppointmentsCubit>()
+                          .loadAppointments(date: _selectedDate),
+                    );
                   },
                 ),
               ],
@@ -258,7 +262,7 @@ class _AppointmentsCalendarViewState extends State<AppointmentsCalendarView> {
                                 horizontal: AppSpacing.sm,
                                 vertical: AppSpacing.xs,
                               ),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: AppColors.primaryTint,
                                 borderRadius: AppRadius.roundedSm,
                               ),

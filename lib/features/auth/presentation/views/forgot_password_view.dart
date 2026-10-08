@@ -78,12 +78,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
+                          const Text(
                             'Şifrenizi mi unuttunuz?',
                             style: AppTypography.titleLarge,
                           ),
                           const SizedBox(height: AppSpacing.xs),
-                          Text(
+                          const Text(
                             'Kayıtlı e-posta adresinizi girin. Size şifre sıfırlama talimatlarını iletelim.',
                             style: AppTypography.bodyMedium,
                           ),

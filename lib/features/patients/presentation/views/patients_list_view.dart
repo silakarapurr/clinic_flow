@@ -35,7 +35,7 @@ class _PatientsListViewState extends State<PatientsListView> {
   }
 
   void _openCreatePatient() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (ctx) => CreatePatientDialog(
         onSave: (name, phone, birthDate, notes) {
@@ -54,7 +54,7 @@ class _PatientsListViewState extends State<PatientsListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.patients, style: AppTypography.titleLarge),
+        title: const Text(AppStrings.patients, style: AppTypography.titleLarge),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.md),
@@ -144,7 +144,7 @@ class _PatientsListViewState extends State<PatientsListView> {
                       return AppCard(
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (_) =>
                                   PatientDetailView(patient: patient),
                             ),

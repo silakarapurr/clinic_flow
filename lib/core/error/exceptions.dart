@@ -45,3 +45,12 @@ class StorageException implements Exception {
   @override
   String toString() => 'StorageException(message: $message)';
 }
+
+class ValidationException implements Exception {
+  final String message;
+
+  const ValidationException({required this.message});
+
+  @override
+  String toString() => 'ValidationException(message: $message)';
+}

@@ -61,7 +61,7 @@ class _CreatePatientDialogState extends State<CreatePatientDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
       insetPadding: const EdgeInsets.all(AppSpacing.md),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 440),
@@ -77,7 +77,7 @@ class _CreatePatientDialogState extends State<CreatePatientDialog> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(AppStrings.newPatient, style: AppTypography.titleLarge),
+                      const Text(AppStrings.newPatient, style: AppTypography.titleLarge),
                       IconButton(
                         icon: const Icon(Icons.close_rounded, size: 20),
                         onPressed: () => Navigator.of(context).pop(),

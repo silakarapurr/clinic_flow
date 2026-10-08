@@ -86,5 +86,6 @@ class AppStrings {
   static const String authSessionExpired = 'Oturum süreniz doldu. Lütfen tekrar giriş yapın.';
   static const String conflictError = 'Seçilen saatte doktorun başka bir randevusu bulunmaktadır.';
   static const String validationError = 'Lütfen formdaki zorunlu alanları eksiksiz doldurun.';
+  static const String duplicatePhoneError = 'Bu telefon numarası ile kayıtlı bir hasta zaten mevcut.';
   static const String notFoundError = 'Aranan kayıt bulunamadı.';
 }

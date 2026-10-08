@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 
 import '../constants/app_strings.dart';
 import 'exceptions.dart';
@@ -16,6 +17,13 @@ class ErrorHandler {
       return const NetworkFailure(message: AppStrings.networkError);
     }
 
+    if (error is fb.FirebaseAuthException) {
+      return AuthFailure(
+        message: _mapFirebaseAuthCode(error.code),
+        code: error.code,
+      );
+    }
+
     if (error is AuthException) {
       return AuthFailure(
         message: _mapAuthError(error.message),
@@ -25,6 +33,10 @@ class ErrorHandler {
 
     if (error is ConflictException) {
       return ConflictFailure(message: error.message);
+    }
+
+    if (error is ValidationException) {
+      return ValidationFailure(message: error.message);
     }
 
     if (error is StorageException) {
@@ -41,6 +53,22 @@ class ErrorHandler {
     }
 
     return const ServerFailure(message: AppStrings.genericError);
+  }
+
+  static String _mapFirebaseAuthCode(String code) {
+    return switch (code) {
+      'user-not-found' ||
+      'wrong-password' ||
+      'invalid-credential' ||
+      'invalid-email' =>
+        AppStrings.authInvalidCredentials,
+      'email-already-in-use' => 'Bu e-posta adresi zaten kayıtlıdır.',
+      'user-disabled' => 'Bu hesap devre dışı bırakılmıştır.',
+      'too-many-requests' =>
+        'Çok fazla başarısız deneme yapıldı. Lütfen biraz bekleyin.',
+      'network-request-failed' => AppStrings.networkError,
+      _ => AppStrings.authInvalidCredentials,
+    };
   }
 
   /// Maps Supabase/Auth technical error strings to clear Turkish text.

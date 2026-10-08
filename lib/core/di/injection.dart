@@ -30,15 +30,15 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<PatientsRepository>(
-    () => PatientsRepositoryImpl(),
+    () => PatientsRepositoryImpl(storageService: sl<SecureStorageService>()),
   );
 
   sl.registerLazySingleton<DoctorsRepository>(
-    () => DoctorsRepositoryImpl(),
+    () => DoctorsRepositoryImpl(storageService: sl<SecureStorageService>()),
   );
 
   sl.registerLazySingleton<AppointmentsRepository>(
-    () => AppointmentsRepositoryImpl(),
+    () => AppointmentsRepositoryImpl(storageService: sl<SecureStorageService>()),
   );
 
   // Cubits & Blocs

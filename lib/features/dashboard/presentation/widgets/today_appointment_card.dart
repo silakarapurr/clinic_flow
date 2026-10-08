@@ -86,7 +86,7 @@ class TodayAppointmentCard extends StatelessWidget {
             children: [
               PopupMenuButton<AppointmentStatus>(
                 onSelected: onStatusChanged,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: AppRadius.roundedMd,
                 ),
                 child: Padding(

@@ -20,19 +20,48 @@ class Patient extends Equatable {
     required this.createdAt,
   });
 
+  Patient copyWith({
+    String? id,
+    String? clinicId,
+    String? fullName,
+    String? phone,
+    DateTime? birthDate,
+    String? notes,
+    DateTime? createdAt,
+  }) {
+    return Patient(
+      id: id ?? this.id,
+      clinicId: clinicId ?? this.clinicId,
+      fullName: fullName ?? this.fullName,
+      phone: phone ?? this.phone,
+      birthDate: birthDate ?? this.birthDate,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      // ignore: avoid_dynamic_calls
+      return value.toDate() as DateTime;
+    } catch (_) {}
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+    return null;
+  }
+
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      id: json['id'] as String,
-      clinicId: json['clinic_id'] as String,
-      fullName: json['full_name'] as String,
-      phone: json['phone'] as String,
-      birthDate: json['birth_date'] != null
-          ? DateTime.tryParse(json['birth_date'] as String)
-          : null,
+      id: json['id'] as String? ?? '',
+      clinicId: json['clinic_id'] as String? ?? '',
+      fullName: json['full_name'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      birthDate: _parseDate(json['birth_date']),
       notes: json['notes'] as String?,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'] as String)
-          : DateTime.now(),
+      createdAt: _parseDate(json['created_at']) ?? DateTime.now(),
     );
   }
 

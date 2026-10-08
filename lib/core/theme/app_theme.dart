@@ -36,12 +36,12 @@ class AppTheme {
           color: AppColors.slateDark,
         ),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.roundedLg,
-          side: const BorderSide(color: AppColors.border, width: 1.0),
+          side: BorderSide(color: AppColors.border, width: 1.0),
         ),
         margin: EdgeInsets.zero,
       ),
@@ -50,25 +50,25 @@ class AppTheme {
         fillColor: AppColors.surface,
         contentPadding: AppSpacing.inputPadding,
         hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.slateMuted),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.border, width: 1.0),
+          borderSide: BorderSide(color: AppColors.border, width: 1.0),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.border, width: 1.0),
+          borderSide: BorderSide(color: AppColors.border, width: 1.0),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.error, width: 1.0),
+          borderSide: BorderSide(color: AppColors.error, width: 1.0),
         ),
-        focusedErrorBorder: OutlineInputBorder(
+        focusedErrorBorder: const OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+          borderSide: BorderSide(color: AppColors.error, width: 1.5),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(

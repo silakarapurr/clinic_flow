@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // KVKK and Multi-tenant Security Rules
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isClinicMember(clinicId) {
+      return isAuthenticated() && (
+        request.auth.token.clinicId == clinicId ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         getUserDoc().clinicId == clinicId)
+      );
+    }
+    
+    function isAdmin(clinicId) {
+      return isClinicMember(clinicId) && getUserDoc().role == 'admin';
+    }
+
+    // Direct user profiles mapped by auth uid
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Clinic-scoped multi-tenant data
+    match /clinics/{clinicId} {
+      allow read: if isClinicMember(clinicId);
+      allow write: if isAdmin(clinicId);
+
+      match /users/{userId} {
+        allow read: if isClinicMember(clinicId);
+        allow write: if isAdmin(clinicId);
+      }
+
+      match /doctors/{doctorId} {
+        allow read: if isClinicMember(clinicId);
+        allow write: if isAdmin(clinicId);
+      }
+
+      match /patients/{patientId} {
+        allow read, write: if isClinicMember(clinicId);
+      }
+
+      match /appointments/{appointmentId} {
+        allow read, write: if isClinicMember(clinicId);
+      }
+    }
+  }
+}

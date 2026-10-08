@@ -61,26 +61,41 @@ class Appointment extends Equatable {
     );
   }
 
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value.toLocal();
+    try {
+      // ignore: avoid_dynamic_calls
+      return (value.toDate() as DateTime).toLocal();
+    } catch (_) {}
+    if (value is String) {
+      final parsed = DateTime.tryParse(value);
+      return parsed?.toLocal();
+    }
+    return null;
+  }
+
   factory Appointment.fromJson(Map<String, dynamic> json) {
     final doctor = json['doctors'] as Map<String, dynamic>? ?? {};
     final patient = json['patients'] as Map<String, dynamic>? ?? {};
     final service = json['services'] as Map<String, dynamic>? ?? {};
 
+    final now = DateTime.now();
     return Appointment(
-      id: json['id'] as String,
-      clinicId: json['clinic_id'] as String,
-      doctorId: json['doctor_id'] as String,
+      id: json['id'] as String? ?? '',
+      clinicId: json['clinic_id'] as String? ?? '',
+      doctorId: json['doctor_id'] as String? ?? '',
       doctorName: (doctor['full_name'] as String?) ??
           (json['doctor_name'] as String? ?? 'Doktor'),
-      patientId: json['patient_id'] as String,
+      patientId: json['patient_id'] as String? ?? '',
       patientName: (patient['full_name'] as String?) ??
           (json['patient_name'] as String? ?? 'Hasta'),
       patientPhone: (patient['phone'] as String?) ??
           (json['patient_phone'] as String? ?? ''),
       serviceName: (service['name'] as String?) ??
           (json['service_name'] as String? ?? 'Genel Muayene'),
-      startTime: DateTime.parse(json['start_time'] as String).toLocal(),
-      endTime: DateTime.parse(json['end_time'] as String).toLocal(),
+      startTime: _parseDate(json['start_time']) ?? now,
+      endTime: _parseDate(json['end_time']) ?? now.add(const Duration(minutes: 30)),
       status: AppointmentStatus.fromString(json['status'] as String? ?? 'scheduled'),
       clinicalNote: json['clinical_note'] as String?,
     );
@@ -91,7 +106,11 @@ class Appointment extends Equatable {
       'id': id,
       'clinic_id': clinicId,
       'doctor_id': doctorId,
+      'doctor_name': doctorName,
       'patient_id': patientId,
+      'patient_name': patientName,
+      'patient_phone': patientPhone,
+      'service_name': serviceName,
       'start_time': startTime.toUtc().toIso8601String(),
       'end_time': endTime.toUtc().toIso8601String(),
       'status': status.name,

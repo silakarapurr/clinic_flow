@@ -26,6 +26,32 @@ class Doctor extends Equatable {
     this.isActive = true,
   });
 
+  Doctor copyWith({
+    String? id,
+    String? clinicId,
+    String? fullName,
+    String? specialty,
+    String? phone,
+    List<int>? workDays,
+    String? startHour,
+    String? endHour,
+    int? slotDurationMinutes,
+    bool? isActive,
+  }) {
+    return Doctor(
+      id: id ?? this.id,
+      clinicId: clinicId ?? this.clinicId,
+      fullName: fullName ?? this.fullName,
+      specialty: specialty ?? this.specialty,
+      phone: phone ?? this.phone,
+      workDays: workDays ?? this.workDays,
+      startHour: startHour ?? this.startHour,
+      endHour: endHour ?? this.endHour,
+      slotDurationMinutes: slotDurationMinutes ?? this.slotDurationMinutes,
+      isActive: isActive ?? this.isActive,
+    );
+  }
+
   factory Doctor.fromJson(Map<String, dynamic> json) {
     final wh = json['working_hours'] as Map<String, dynamic>? ?? {};
     final days = (wh['work_days'] as List<dynamic>?)

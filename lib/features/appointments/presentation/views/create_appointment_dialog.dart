@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -33,7 +32,8 @@ class CreateAppointmentDialog extends StatefulWidget {
   });
 
   @override
-  State<CreateAppointmentDialog> createState() => _CreateAppointmentDialogState();
+  State<CreateAppointmentDialog> createState() =>
+      _CreateAppointmentDialogState();
 }
 
 class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
@@ -128,10 +128,8 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('d MMMM yyyy, EEEE', 'tr_TR');
-
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
       insetPadding: const EdgeInsets.all(AppSpacing.md),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),
@@ -152,7 +150,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               AppStrings.newAppointment,
                               style: AppTypography.titleLarge,
                             ),
@@ -173,7 +171,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<Patient>(
-                          value: _selectedPatient,
+                          initialValue: _selectedPatient,
                           decoration: const InputDecoration(),
                           items: _patients.map((p) {
                             return DropdownMenuItem(
@@ -199,7 +197,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<Doctor>(
-                          value: _selectedDoctor,
+                          initialValue: _selectedDoctor,
                           decoration: const InputDecoration(),
                           items: _doctors.map((d) {
                             return DropdownMenuItem(
@@ -225,7 +223,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<String>(
-                          value: _selectedService,
+                          initialValue: _selectedService,
                           decoration: const InputDecoration(),
                           items: _services.map((s) {
                             return DropdownMenuItem(value: s, child: Text(s));
@@ -260,8 +258,8 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                                       final picked = await showDatePicker(
                                         context: context,
                                         initialDate: _selectedDate,
-                                        firstDate: DateTime.now().subtract(
-                                            const Duration(days: 30)),
+                                        firstDate: DateTime.now()
+                                            .subtract(const Duration(days: 30)),
                                         lastDate: DateTime.now()
                                             .add(const Duration(days: 365)),
                                         locale: const Locale('tr', 'TR'),

@@ -77,7 +77,7 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
                 width: 36,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.slateLight.withOpacity(0.3),
+                  color: AppColors.slateLight.withValues(alpha: 0.3),
                   borderRadius: AppRadius.roundedFull,
                 ),
               ),
@@ -87,7 +87,7 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Randevu Detayı',
                   style: AppTypography.titleLarge,
                 ),

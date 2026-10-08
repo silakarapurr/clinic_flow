@@ -27,7 +27,7 @@ class _DoctorsListViewState extends State<DoctorsListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.doctors, style: AppTypography.titleLarge),
+        title: const Text(AppStrings.doctors, style: AppTypography.titleLarge),
       ),
       body: BlocBuilder<DoctorsCubit, DoctorsState>(
         builder: (context, state) {
@@ -58,10 +58,10 @@ class _DoctorsListViewState extends State<DoctorsListView> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
+                          const CircleAvatar(
                             radius: 24,
                             backgroundColor: AppColors.primaryLight,
-                            child: const Icon(
+                            child: Icon(
                               Icons.person_pin_rounded,
                               color: AppColors.primary,
                               size: 28,

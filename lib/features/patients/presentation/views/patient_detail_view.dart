@@ -40,7 +40,7 @@ class _PatientDetailViewState extends State<PatientDetailView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.patientDetail),
+        title: const Text(AppStrings.patientDetail),
       ),
       body: SingleChildScrollView(
         padding: AppSpacing.pagePadding,
@@ -106,7 +106,7 @@ class _PatientDetailViewState extends State<PatientDetailView> {
               AppCard(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 color: AppColors.primaryTint,
-                borderColor: AppColors.primary.withOpacity(0.3),
+                borderColor: AppColors.primary.withValues(alpha: 0.3),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -144,7 +144,7 @@ class _PatientDetailViewState extends State<PatientDetailView> {
             ],
 
             // Appointment History
-            Text(AppStrings.patientHistory, style: AppTypography.titleMedium),
+            const Text(AppStrings.patientHistory, style: AppTypography.titleMedium),
             const SizedBox(height: AppSpacing.sm),
 
             FutureBuilder<List<Appointment>>(
@@ -212,7 +212,7 @@ class _PatientDetailViewState extends State<PatientDetailView> {
                             const SizedBox(height: AppSpacing.sm),
                             Container(
                               padding: const EdgeInsets.all(AppSpacing.xs),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: AppColors.borderSubtle,
                                 borderRadius: AppRadius.roundedSm,
                               ),

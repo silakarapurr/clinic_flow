@@ -48,7 +48,7 @@ class _SplashViewState extends State<SplashView> {
   void _navigateTo(Widget target) {
     _safetyTimer?.cancel();
     Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
+      PageRouteBuilder<void>(
         pageBuilder: (_, __, ___) => target,
         transitionsBuilder: (_, animation, __, child) =>
             FadeTransition(opacity: animation, child: child),
@@ -81,7 +81,7 @@ class _SplashViewState extends State<SplashView> {
                   borderRadius: AppRadius.roundedXl,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.25),
+                      color: AppColors.primary.withValues(alpha: 0.25),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -94,12 +94,12 @@ class _SplashViewState extends State<SplashView> {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
+              const Text(
                 AppStrings.appName,
                 style: AppTypography.displayMedium,
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
+              const Text(
                 AppStrings.appTagline,
                 style: AppTypography.bodyMedium,
               ),

@@ -26,7 +26,7 @@ class DashboardView extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppStrings.dashboard, style: AppTypography.titleLarge),
+            const Text(AppStrings.dashboard, style: AppTypography.titleLarge),
             Text(
               todayFormatted,
               style: AppTypography.bodySmall.copyWith(
@@ -123,7 +123,7 @@ class DashboardView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           AppStrings.upcomingAppointments,
                           style: AppTypography.titleMedium,
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/shell/main_shell_view.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -47,7 +48,13 @@ class _LoginViewState extends State<LoginView> {
       body: SafeArea(
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
-            if (state is AuthError) {
+            if (state is Authenticated) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (_) => const MainShellView(),
+                ),
+              );
+            } else if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
@@ -79,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: AppRadius.roundedXl,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.2),
+                                color: AppColors.primary.withValues(alpha: 0.2),
                                 blurRadius: 16,
                                 offset: const Offset(0, 6),
                               ),
@@ -93,13 +100,13 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.lg),
-                      Text(
+                      const Text(
                         AppStrings.appName,
                         style: AppTypography.displayMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppSpacing.xs),
-                      Text(
+                      const Text(
                         AppStrings.loginSubtitle,
                         style: AppTypography.bodyMedium,
                         textAlign: TextAlign.center,
@@ -158,7 +165,7 @@ class _LoginViewState extends State<LoginView> {
                                 child: TextButton(
                                   onPressed: () {
                                     Navigator.of(context).push(
-                                      MaterialPageRoute(
+                                      MaterialPageRoute<void>(
                                         builder: (_) => const ForgotPasswordView(),
                                       ),
                                     );
