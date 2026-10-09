@@ -12,10 +12,14 @@ class AppStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4.5),
       decoration: BoxDecoration(
         color: status.backgroundColor,
         borderRadius: AppRadius.roundedFull,
+        border: Border.all(
+          color: status.color.withValues(alpha: 0.22),
+          width: 0.8,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -26,14 +30,23 @@ class AppStatusBadge extends StatelessWidget {
             decoration: BoxDecoration(
               color: status.color,
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: status.color.withValues(alpha: 0.4),
+                  blurRadius: 4,
+                  spreadRadius: 0.5,
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: 6),
           Text(
             status.label,
             style: AppTypography.labelSmall.copyWith(
               color: status.color,
               fontWeight: FontWeight.w600,
+              fontSize: 11.5,
+              letterSpacing: -0.1,
             ),
           ),
         ],

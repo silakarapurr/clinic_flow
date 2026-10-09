@@ -23,42 +23,46 @@ class MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.md,
-      ),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      borderRadius: AppRadius.roundedLg,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
                   color: backgroundColor,
-                  borderRadius: AppRadius.roundedSm,
+                  borderRadius: AppRadius.roundedMd,
+                  border: Border.all(
+                    color: color.withValues(alpha: 0.2),
+                    width: 0.8,
+                  ),
                 ),
-                child: Icon(icon, size: 18, color: color),
+                child: Icon(icon, size: 20, color: color),
               ),
               Text(
                 count.toString(),
-                style: AppTypography.displayMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 22,
+                style: AppTypography.statNumber.copyWith(
+                  fontSize: 24,
                   color: AppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             label,
             style: AppTypography.labelMedium.copyWith(
               color: AppColors.textSecondary,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
+              fontSize: 12.5,
+              letterSpacing: -0.2,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

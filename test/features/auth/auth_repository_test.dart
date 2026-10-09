@@ -38,6 +38,33 @@ void main() {
       verify(() => mockStorageService.saveClinicId(any())).called(1);
     });
 
+    test('should login successfully with super admin credentials (admin / admin123)', () async {
+      final user = await authRepository.login(
+        email: 'admin',
+        password: 'admin123',
+      );
+
+      expect(user.email, equals('admin@clinicflow.com'));
+      expect(user.fullName, equals('Sistem Yöneticisi (Super Admin)'));
+      expect(user.isAdmin, isTrue);
+      verify(() => mockStorageService.saveAuthToken(any())).called(1);
+      verify(() => mockStorageService.saveClinicId(any())).called(1);
+    });
+
+    test('should reject super admin with incorrect password', () async {
+      expect(
+        () => authRepository.login(
+          email: 'admin',
+          password: 'wrong_password',
+        ),
+        throwsA(isA<AuthException>().having(
+          (e) => e.message,
+          'message',
+          AppStrings.authInvalidCredentials,
+        )),
+      );
+    });
+
     test('should reject demo account with incorrect password', () async {
       expect(
         () => authRepository.login(

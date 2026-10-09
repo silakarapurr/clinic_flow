@@ -3,17 +3,21 @@ import Navbar from './components/Navbar';
 import PublicRegistration from './components/PublicRegistration';
 import ApplicationTracker from './components/ApplicationTracker';
 import AdminDashboard from './components/AdminDashboard';
+import AdminLogin from './components/AdminLogin';
 import Toast from './components/Toast';
 import { eventService } from './services/eventService';
 import { registrationService } from './services/registrationService';
+import { authService } from './services/authService';
 import { isFirebaseInitialized } from './firebase';
 import { ShieldCheck, HeartHandshake, Sparkles, Building2 } from 'lucide-react';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('register'); // 'register' | 'track' | 'admin'
-  const [isAdmin, setIsAdmin] = useState(false);
   const [trackerCode, setTrackerCode] = useState('');
   
+  // Admin auth session state (credentials: admin / admin123)
+  const [adminSession, setAdminSession] = useState(authService.getCurrentUser());
+
   // Real-time states
   const [events, setEvents] = useState([]);
   const [applications, setApplications] = useState([]);
@@ -23,11 +27,13 @@ export default function App() {
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
+    const unsubAuth = authService.subscribe(setAdminSession);
     const unsubEvents = eventService.subscribe(setEvents);
     const unsubApps = registrationService.subscribeApplications(setApplications);
     const unsubUsers = registrationService.subscribeUsers(setUsers);
 
     return () => {
+      unsubAuth();
       unsubEvents();
       unsubApps();
       unsubUsers();
@@ -57,6 +63,17 @@ export default function App() {
     setCurrentTab('track');
   };
 
+  const handleLoginSuccess = (user) => {
+    showToast(`Hoş geldiniz, ${user.displayName}!`, 'success');
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    showToast('Yönetici oturumu güvenle kapatıldı.', 'info');
+  };
+
+  const isAdminAuthenticated = Boolean(adminSession && adminSession.isAuthenticated);
+
   return (
     <div className="app-container">
       {/* Top Sticky Navigation */}
@@ -64,8 +81,8 @@ export default function App() {
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         pendingCount={pendingCount}
-        isAdmin={isAdmin}
-        setIsAdmin={setIsAdmin}
+        adminSession={adminSession}
+        onLogout={handleLogout}
         isOnline={isFirebaseInitialized}
       />
 
@@ -86,13 +103,20 @@ export default function App() {
         )}
 
         {currentTab === 'admin' && (
-          <AdminDashboard
-            events={events}
-            applications={applications}
-            users={users}
-            onShowToast={showToast}
-            isOnline={isFirebaseInitialized}
-          />
+          <>
+            {isAdminAuthenticated ? (
+              <AdminDashboard
+                events={events}
+                applications={applications}
+                users={users}
+                adminSession={adminSession}
+                onShowToast={showToast}
+                isOnline={isFirebaseInitialized}
+              />
+            ) : (
+              <AdminLogin onLoginSuccess={handleLoginSuccess} />
+            )}
+          </>
         )}
       </main>
 

@@ -61,7 +61,7 @@ class _CreatePatientDialogState extends State<CreatePatientDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedXl),
       insetPadding: const EdgeInsets.all(AppSpacing.md),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 440),
@@ -77,18 +77,43 @@ class _CreatePatientDialogState extends State<CreatePatientDialog> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(AppStrings.newPatient, style: AppTypography.titleLarge),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryLight,
+                              borderRadius: AppRadius.roundedSm,
+                            ),
+                            child: const Icon(
+                              Icons.person_add_rounded,
+                              size: 20,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          const Text(
+                            AppStrings.newPatient,
+                            style: AppTypography.titleLarge,
+                          ),
+                        ],
+                      ),
                       IconButton(
                         icon: const Icon(Icons.close_rounded, size: 20),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.lg),
                   AppTextField(
                     label: AppStrings.patientName,
                     hint: 'Ad ve Soyad',
                     controller: _nameController,
+                    prefixIcon: const Icon(
+                      Icons.person_outline_rounded,
+                      size: 20,
+                      color: AppColors.slateLight,
+                    ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return 'Hasta adı zorunludur.';

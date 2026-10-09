@@ -58,4 +58,35 @@ class AppColors {
   static const Color error = Color(0xFFEF4444);
   static const Color warning = Color(0xFFF59E0B);
   static const Color info = Color(0xFF3B82F6);
+
+  // Gradients for Modern Medical Aesthetics
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF0F766E), Color(0xFF0D9488), Color(0xFF14B8A6)],
+  );
+
+  static const LinearGradient heroGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFF0F766E), Color(0xFF042F2E)],
+  );
+
+  static const LinearGradient surfaceGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFFFFFF), Color(0xFFF8FAFC)],
+  );
+
+  static const LinearGradient cardHighlightGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF0FDFA), Color(0xFFFFFFFF)],
+  );
+
+  // Soft Card Shadow & Glow Colors
+  static Color get cardShadow => const Color(0xFF0F172A).withValues(alpha: 0.04);
+  static Color get cardShadowElevated => const Color(0xFF0F172A).withValues(alpha: 0.08);
+  static Color get primaryGlow => primary.withValues(alpha: 0.25);
 }
+

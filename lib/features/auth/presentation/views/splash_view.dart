@@ -69,51 +69,85 @@ class _SplashViewState extends State<SplashView> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 72,
-                height: 72,
+        body: Stack(
+          children: [
+            // Subtle ambient gradient background
+            Positioned(
+              top: -120,
+              right: -120,
+              child: Container(
+                width: 320,
+                height: 320,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: AppRadius.roundedXl,
+                  shape: BoxShape.circle,
+                  color: AppColors.primaryLight.withValues(alpha: 0.4),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.25),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      color: AppColors.primary.withValues(alpha: 0.15),
+                      blurRadius: 100,
+                      spreadRadius: 20,
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.local_hospital_rounded,
-                  size: 40,
-                  color: Colors.white,
-                ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              const Text(
-                AppStrings.appName,
-                style: AppTypography.displayMedium,
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                      borderRadius: AppRadius.roundedXl,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.35),
+                          blurRadius: 24,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.local_hospital_rounded,
+                        size: 44,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  const Text(
+                    AppStrings.appName,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.8,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    AppStrings.appTagline,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColors.slateLight,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxxl),
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                AppStrings.appTagline,
-                style: AppTypography.bodyMedium,
-              ),
-              const SizedBox(height: AppSpacing.xxl),
-              const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.4,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

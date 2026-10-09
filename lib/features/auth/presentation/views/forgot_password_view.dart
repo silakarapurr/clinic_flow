@@ -71,6 +71,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 420),
                   child: AppCard(
+                    borderRadius: AppRadius.roundedXl,
+                    boxShadow: AppShadows.cardElevated,
                     padding: const EdgeInsets.all(AppSpacing.xl),
                     child: Form(
                       key: _formKey,
@@ -78,16 +80,39 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Center(
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryLight,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.primary.withValues(alpha: 0.2),
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.lock_reset_rounded,
+                                size: 30,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
                           const Text(
                             'Şifrenizi mi unuttunuz?',
                             style: AppTypography.titleLarge,
+                            textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: AppSpacing.xs),
-                          const Text(
+                          Text(
                             'Kayıtlı e-posta adresinizi girin. Size şifre sıfırlama talimatlarını iletelim.',
-                            style: AppTypography.bodyMedium,
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: AppColors.slateLight,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: AppSpacing.xl),
                           AppTextField(
                             label: AppStrings.emailLabel,
                             hint: 'ornek@klinik.com',
@@ -108,7 +133,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: AppSpacing.xl),
                           AppButton(
                             text: 'Sıfırlama Bağlantısı Gönder',
                             onPressed: _submit,

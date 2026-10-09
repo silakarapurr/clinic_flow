@@ -38,9 +38,22 @@ class _PatientDetailViewState extends State<PatientDetailView> {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('d MMMM yyyy', 'tr_TR');
 
+    final initial = widget.patient.fullName.isNotEmpty
+        ? widget.patient.fullName[0].toUpperCase()
+        : 'H';
+
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(AppStrings.patientDetail),
+        title: const Text(
+          AppStrings.patientDetail,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.4,
+            color: AppColors.textPrimary,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: AppSpacing.pagePadding,
@@ -49,34 +62,41 @@ class _PatientDetailViewState extends State<PatientDetailView> {
           children: [
             // Patient Header Card
             AppCard(
+              borderRadius: AppRadius.roundedXl,
+              boxShadow: AppShadows.cardElevated,
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
                 children: [
                   CircleAvatar(
-                    radius: 36,
+                    radius: 38,
                     backgroundColor: AppColors.primaryLight,
                     child: Text(
-                      widget.patient.fullName.isNotEmpty
-                          ? widget.patient.fullName[0].toUpperCase()
-                          : 'H',
+                      initial,
                       style: AppTypography.displayMedium.copyWith(
-                        color: AppColors.primary,
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
                       ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     widget.patient.fullName,
-                    style: AppTypography.titleLarge,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.4,
+                      color: AppColors.textPrimary,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
                         Icons.phone_outlined,
-                        size: 16,
+                        size: 15,
                         color: AppColors.slateLight,
                       ),
                       const SizedBox(width: 4),
@@ -84,15 +104,26 @@ class _PatientDetailViewState extends State<PatientDetailView> {
                         widget.patient.phone,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.slateLight,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
                   if (widget.patient.birthDate != null) ...[
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      'Doğum Tarihi: ${dateFormat.format(widget.patient.birthDate!)}',
-                      style: AppTypography.bodySmall,
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppColors.borderSubtle,
+                        borderRadius: AppRadius.roundedFull,
+                      ),
+                      child: Text(
+                        'Doğum Tarihi: ${dateFormat.format(widget.patient.birthDate!)}',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.slateDark,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ],
                 ],
@@ -103,17 +134,22 @@ class _PatientDetailViewState extends State<PatientDetailView> {
 
             // Clinical notes (KVKK safe)
             if (widget.patient.notes != null && widget.patient.notes!.isNotEmpty) ...[
-              AppCard(
+              Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                color: AppColors.primaryTint,
-                borderColor: AppColors.primary.withValues(alpha: 0.3),
+                decoration: BoxDecoration(
+                  color: AppColors.statusScheduledBg,
+                  borderRadius: AppRadius.roundedLg,
+                  border: Border.all(
+                    color: AppColors.statusScheduled.withValues(alpha: 0.3),
+                  ),
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.warning_amber_rounded,
-                      color: AppColors.primary,
-                      size: 20,
+                      color: AppColors.statusScheduled,
+                      size: 22,
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
@@ -123,15 +159,16 @@ class _PatientDetailViewState extends State<PatientDetailView> {
                           Text(
                             'Klinik & Dikkat Notları',
                             style: AppTypography.labelMedium.copyWith(
-                              color: AppColors.primaryDark,
-                              fontWeight: FontWeight.bold,
+                              color: AppColors.statusScheduled,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 3),
                           Text(
                             widget.patient.notes!,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.slateDark,
+                              height: 1.4,
                             ),
                           ),
                         ],
@@ -144,7 +181,20 @@ class _PatientDetailViewState extends State<PatientDetailView> {
             ],
 
             // Appointment History
-            const Text(AppStrings.patientHistory, style: AppTypography.titleMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  AppStrings.patientHistory,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.sm),
 
             FutureBuilder<List<Appointment>>(

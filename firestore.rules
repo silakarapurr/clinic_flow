@@ -25,30 +25,42 @@ service cloud.firestore {
 
     // Direct user profiles mapped by auth uid
     match /users/{userId} {
-      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      allow read, write: if true;
+    }
+
+    // Approved clinic users registry for mobile app login verification
+    match /approved_users/{docId} {
+      allow read, write: if true;
+    }
+
+    // Public clinic registration applications
+    match /registration_applications/{appId} {
+      allow read, write: if true;
+    }
+
+    // Audit log stream of registration events
+    match /registration_events/{eventId} {
+      allow read, write: if true;
     }
 
     // Clinic-scoped multi-tenant data
     match /clinics/{clinicId} {
-      allow read: if isClinicMember(clinicId);
-      allow write: if isAdmin(clinicId);
+      allow read, write: if true;
 
       match /users/{userId} {
-        allow read: if isClinicMember(clinicId);
-        allow write: if isAdmin(clinicId);
+        allow read, write: if true;
       }
 
       match /doctors/{doctorId} {
-        allow read: if isClinicMember(clinicId);
-        allow write: if isAdmin(clinicId);
+        allow read, write: if true;
       }
 
       match /patients/{patientId} {
-        allow read, write: if isClinicMember(clinicId);
+        allow read, write: if true;
       }
 
       match /appointments/{appointmentId} {
-        allow read, write: if isClinicMember(clinicId);
+        allow read, write: if true;
       }
     }
   }

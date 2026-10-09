@@ -17,17 +17,37 @@ class LoadingIndicator extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
-            width: 32,
-            height: 32,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.8,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: AppColors.primaryTint,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  blurRadius: 16,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.8,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              ),
             ),
           ),
           if (message != null) ...[
             const SizedBox(height: AppSpacing.md),
-            Text(message!, style: AppTypography.bodyMedium),
+            Text(
+              message!,
+              style: AppTypography.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ],
       ),
@@ -35,7 +55,7 @@ class LoadingIndicator extends StatelessWidget {
   }
 }
 
-/// Friendly empty state placeholder.
+/// Friendly empty state placeholder with modern medical styling.
 class EmptyStateView extends StatelessWidget {
   final String title;
   final String? description;
@@ -61,35 +81,56 @@ class EmptyStateView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 64,
-              height: 64,
-              decoration: const BoxDecoration(
-                color: AppColors.primaryTint,
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primaryLight, AppColors.primaryTint],
+                ),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.12),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-              child: Icon(icon, size: 30, color: AppColors.primary),
+              child: Icon(icon, size: 32, color: AppColors.primary),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               title,
-              style: AppTypography.titleMedium,
+              style: AppTypography.titleMedium.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
               textAlign: TextAlign.center,
             ),
             if (description != null) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(
                 description!,
-                style: AppTypography.bodyMedium,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.slateLight,
+                  height: 1.4,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
             if (actionText != null && onAction != null) ...[
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.xl),
               AppButton(
                 text: actionText!,
                 onPressed: onAction,
-                width: 180,
-                height: 42,
+                width: 200,
+                height: 44,
               ),
             ],
           ],
@@ -119,15 +160,26 @@ class ErrorStateView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 56,
-              height: 56,
-              decoration: const BoxDecoration(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
                 color: AppColors.statusCancelledBg,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.2),
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.error.withValues(alpha: 0.1),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: const Icon(
                 Icons.error_outline_rounded,
-                size: 28,
+                size: 30,
                 color: AppColors.error,
               ),
             ),
@@ -147,7 +199,7 @@ class ErrorStateView extends StatelessWidget {
                 onPressed: onRetry,
                 variant: AppButtonVariant.outline,
                 width: 150,
-                height: 40,
+                height: 42,
               ),
             ],
           ],

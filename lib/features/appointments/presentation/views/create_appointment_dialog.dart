@@ -129,7 +129,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedLg),
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.roundedXl),
       insetPadding: const EdgeInsets.all(AppSpacing.md),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),
@@ -150,9 +150,26 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              AppStrings.newAppointment,
-                              style: AppTypography.titleLarge,
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryLight,
+                                    borderRadius: AppRadius.roundedSm,
+                                  ),
+                                  child: const Icon(
+                                    Icons.calendar_month_rounded,
+                                    size: 20,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                const Text(
+                                  AppStrings.newAppointment,
+                                  style: AppTypography.titleLarge,
+                                ),
+                              ],
                             ),
                             IconButton(
                               icon: const Icon(Icons.close_rounded, size: 20),
@@ -160,7 +177,7 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: AppSpacing.lg),
 
                         // Select Patient
                         Text(
@@ -172,11 +189,20 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<Patient>(
                           initialValue: _selectedPatient,
-                          decoration: const InputDecoration(),
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.person_outline_rounded,
+                              size: 20,
+                              color: AppColors.slateLight,
+                            ),
+                          ),
                           items: _patients.map((p) {
                             return DropdownMenuItem(
                               value: p,
-                              child: Text('${p.fullName} (${p.phone})'),
+                              child: Text(
+                                '${p.fullName} (${p.phone})',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (val) {
@@ -198,11 +224,20 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<Doctor>(
                           initialValue: _selectedDoctor,
-                          decoration: const InputDecoration(),
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.medical_services_outlined,
+                              size: 20,
+                              color: AppColors.slateLight,
+                            ),
+                          ),
                           items: _doctors.map((d) {
                             return DropdownMenuItem(
                               value: d,
-                              child: Text('${d.fullName} - ${d.specialty}'),
+                              child: Text(
+                                '${d.fullName} - ${d.specialty}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (val) {
@@ -224,7 +259,13 @@ class _CreateAppointmentDialogState extends State<CreateAppointmentDialog> {
                         const SizedBox(height: AppSpacing.xs),
                         DropdownButtonFormField<String>(
                           initialValue: _selectedService,
-                          decoration: const InputDecoration(),
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.health_and_safety_outlined,
+                              size: 20,
+                              color: AppColors.slateLight,
+                            ),
+                          ),
                           items: _services.map((s) {
                             return DropdownMenuItem(value: s, child: Text(s));
                           }).toList(),

@@ -7,17 +7,21 @@ import {
   Search, 
   Database,
   Building2,
-  CheckCircle2
+  CheckCircle2,
+  LogOut,
+  Lock
 } from 'lucide-react';
 
 export default function Navbar({ 
   currentTab, 
   setCurrentTab, 
   pendingCount, 
-  isAdmin, 
-  setIsAdmin,
+  adminSession,
+  onLogout,
   isOnline 
 }) {
+  const isAuthenticated = Boolean(adminSession && adminSession.isAuthenticated);
+
   return (
     <header className="navbar">
       <div className="navbar-inner">
@@ -58,10 +62,7 @@ export default function Navbar({
           <button 
             type="button"
             className={`nav-item ${currentTab === 'admin' ? 'active' : ''}`}
-            onClick={() => {
-              setCurrentTab('admin');
-              setIsAdmin(true);
-            }}
+            onClick={() => setCurrentTab('admin')}
           >
             <ShieldCheck size={16} />
             <span>Yönetici &amp; Olay Paneli</span>
@@ -80,18 +81,45 @@ export default function Navbar({
             <span>{isOnline ? 'Firebase Aktif' : 'Demo / Yerel Mod'}</span>
           </div>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${isAdmin ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => {
-              setIsAdmin(!isAdmin);
-              if (!isAdmin) setCurrentTab('admin');
-            }}
-            title="Yönetici oturumunu değiştir"
-          >
-            <Building2 size={14} />
-            <span>{isAdmin ? 'Dr. Zeynep (Yönetici)' : 'Yönetici Girişi'}</span>
-          </button>
+          {isAuthenticated ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '0.35rem', 
+                background: 'var(--primary-tint)', 
+                border: '1px solid var(--primary-light)', 
+                borderRadius: 'var(--radius-md)', 
+                padding: '0.35rem 0.65rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: 'var(--primary-dark)'
+              }}>
+                <ShieldCheck size={14} color="var(--primary)" />
+                <span>admin</span>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-ghost"
+                onClick={onLogout}
+                title="Yönetici oturumunu kapat"
+                style={{ color: 'var(--error)' }}
+              >
+                <LogOut size={14} />
+                <span>Çıkış</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={() => setCurrentTab('admin')}
+              title="Yönetici paneline giriş yap (admin / admin123)"
+            >
+              <Lock size={14} />
+              <span>Yönetici Girişi</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

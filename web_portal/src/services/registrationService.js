@@ -130,6 +130,41 @@ class RegistrationService {
     this.userListeners = new Set();
     this.applications = this.loadLocalApplications();
     this.users = this.loadLocalUsers();
+    this.syncDefaultApprovedUsersToFirestore();
+  }
+
+  async syncDefaultApprovedUsersToFirestore() {
+    if (!db) return;
+    try {
+      const seedUsers = [
+        {
+          id: 'u101-user-001',
+          email: 'dr.zeynep@clinicflow.com',
+          password: '123456',
+          full_name: 'Dr. Zeynep Kaya',
+          clinic_id: 'c101-clinic-001',
+          clinic_name: 'DentCare & Sağlık Kliniği',
+          role: 'admin',
+          status: 'approved',
+          is_active: true
+        },
+        {
+          id: 'admin-super-001',
+          email: 'admin@clinicflow.com',
+          password: 'admin123',
+          full_name: 'Sistem Yöneticisi (Super Admin)',
+          clinic_id: 'c101-clinic-001',
+          clinic_name: 'ClinicFlow Merkez Yönetim',
+          role: 'admin',
+          status: 'approved',
+          is_active: true
+        }
+      ];
+
+      for (const u of seedUsers) {
+        await setDoc(doc(db, 'approved_users', u.email), u, { merge: true });
+      }
+    } catch (_) {}
   }
 
   loadLocalApplications() {
@@ -206,6 +241,7 @@ class RegistrationService {
       address: formData.address || '',
       staffCount: formData.staffCount || '3-5 Kişi',
       specialty: formData.specialty || '',
+      password: formData.password || 'password123',
       status: 'pending',
       appliedAt: new Date().toISOString(),
       reviewedAt: null,
@@ -369,6 +405,48 @@ class RegistrationService {
       severity: 'info',
       metadata: { role: 'admin' }
     });
+
+    // Sync to Firestore approved_users and clinics collections
+    if (db) {
+      try {
+        const cleanEmail = targetApp.email.toLowerCase();
+        await setDoc(doc(db, 'approved_users', cleanEmail), {
+          id: newUserId,
+          email: cleanEmail,
+          password: targetApp.password || 'password123',
+          full_name: targetApp.doctorName,
+          clinic_id: generatedClinicId,
+          clinic_name: targetApp.clinicName,
+          specialty: targetApp.specialty || 'Klinik Direktörü',
+          phone: targetApp.phone || '',
+          role: 'admin',
+          status: 'approved',
+          is_active: true,
+          approved_at: new Date().toISOString(),
+          approved_by: adminActor
+        });
+
+        await setDoc(doc(db, 'users', newUserId), {
+          id: newUserId,
+          email: cleanEmail,
+          full_name: targetApp.doctorName,
+          clinic_id: generatedClinicId,
+          role: 'admin',
+          is_active: true
+        });
+
+        await setDoc(doc(db, 'clinics', generatedClinicId), {
+          id: generatedClinicId,
+          name: targetApp.clinicName,
+          phone: targetApp.phone || '',
+          address: `${targetApp.address || ''}, ${targetApp.district || ''} / ${targetApp.city || ''}`,
+          lead_doctor: targetApp.doctorName,
+          created_at: new Date().toISOString()
+        });
+      } catch (err) {
+        console.warn('Firestore sync error in approveApplication:', err);
+      }
+    }
 
     return updatedApp;
   }

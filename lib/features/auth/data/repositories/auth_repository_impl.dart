@@ -48,7 +48,28 @@ class AuthRepositoryImpl implements AuthRepository {
       throw const AuthException(message: AppStrings.authInvalidCredentials);
     }
 
-    // Demo account check (prefilled credentials for Apple Review and local preview)
+    // 1. Super Admin Account (admin / admin123 or admin@clinicflow.com / admin123)
+    final isSuperAdmin = cleanEmail.toLowerCase() == 'admin' ||
+        cleanEmail.toLowerCase() == 'admin@clinicflow.com';
+    if (isSuperAdmin) {
+      if (password == 'admin123') {
+        const adminProfile = UserProfile(
+          id: 'admin-super-001',
+          clinicId: SeedData.clinicId,
+          fullName: 'Sistem Yöneticisi (Super Admin)',
+          email: 'admin@clinicflow.com',
+          role: UserRole.admin,
+        );
+        _currentUser = adminProfile;
+        await _storageService.saveAuthToken('token-admin-super');
+        await _storageService.saveClinicId(adminProfile.clinicId);
+        return adminProfile;
+      } else {
+        throw const AuthException(message: AppStrings.authInvalidCredentials);
+      }
+    }
+
+    // 2. Demo account check (prefilled credentials for Apple Review and local preview)
     final isDemoAccount =
         cleanEmail.toLowerCase() == 'dr.zeynep@clinicflow.com' ||
             cleanEmail.toLowerCase() == 'zeynep@clinicflow.com';
@@ -57,6 +78,59 @@ class AuthRepositoryImpl implements AuthRepository {
         return _loginOffline(cleanEmail);
       } else {
         throw const AuthException(message: AppStrings.authInvalidCredentials);
+      }
+    }
+
+    // 3. Approved Users verification via Firestore (Cloud Registry for Web-Approved Clinicians)
+    if (_firestore != null) {
+      try {
+        final docSnap = await _firestore
+            .collection('approved_users')
+            .doc(cleanEmail.toLowerCase())
+            .get();
+
+        if (docSnap.exists && docSnap.data() != null) {
+          final data = docSnap.data()!;
+          final status = (data['status'] as String? ?? 'approved').toLowerCase();
+          final isActive = data['is_active'] as bool? ?? true;
+          final storedPassword = data['password'] as String?;
+
+          if (status == 'pending') {
+            throw const AuthException(
+              message: 'Hesap başvurunuz henüz yönetici tarafından onaylanmamıştır. Lütfen onay bekleyiniz.',
+            );
+          }
+          if (status == 'rejected') {
+            final reason = data['rejection_reason'] as String? ?? 'Başvuru şartları sağlanamadı.';
+            throw AuthException(
+              message: 'Hesap başvurunuz reddedilmiştir: $reason',
+            );
+          }
+          if (!isActive) {
+            throw const AuthException(
+              message: 'Hesabınız yönetici tarafından askıya alınmıştır.',
+            );
+          }
+          if (storedPassword != null && storedPassword != password) {
+            throw const AuthException(message: AppStrings.authInvalidCredentials);
+          }
+
+          final approvedProfile = UserProfile(
+            id: data['id'] as String? ?? docSnap.id,
+            clinicId: data['clinic_id'] as String? ?? SeedData.clinicId,
+            fullName: data['full_name'] as String? ?? 'Klinik Hekimi',
+            email: cleanEmail,
+            role: UserRole.fromString(data['role'] as String? ?? 'admin'),
+            isActive: true,
+          );
+
+          _currentUser = approvedProfile;
+          await _storageService.saveAuthToken('token-${approvedProfile.id}');
+          await _storageService.saveClinicId(approvedProfile.clinicId);
+          return approvedProfile;
+        }
+      } catch (e) {
+        if (e is AuthException) rethrow;
       }
     }
 

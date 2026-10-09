@@ -54,17 +54,20 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('d MMMM yyyy, HH:mm', 'tr_TR');
+    final initial = widget.appointment.patientName.isNotEmpty
+        ? widget.appointment.patientName[0].toUpperCase()
+        : 'H';
 
     return Container(
       padding: EdgeInsets.only(
-        top: AppSpacing.lg,
+        top: AppSpacing.md,
         left: AppSpacing.lg,
         right: AppSpacing.lg,
-        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
       ),
       decoration: const BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xxl)),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -74,8 +77,8 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
             // Drag handle
             Center(
               child: Container(
-                width: 36,
-                height: 4,
+                width: 40,
+                height: 4.5,
                 decoration: BoxDecoration(
                   color: AppColors.slateLight.withValues(alpha: 0.3),
                   borderRadius: AppRadius.roundedFull,
@@ -89,7 +92,12 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
               children: [
                 const Text(
                   'Randevu Detayı',
-                  style: AppTypography.titleLarge,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.4,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 AppStatusBadge(status: _selectedStatus),
               ],
@@ -98,30 +106,57 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
 
             // Patient Card Summary
             AppCard(
+              borderRadius: AppRadius.roundedLg,
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.appointment.patientName,
-                    style: AppTypography.titleMedium.copyWith(fontSize: 16),
-                  ),
-                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
-                        Icons.phone_outlined,
-                        size: 14,
-                        color: AppColors.slateLight,
+                      CircleAvatar(
+                        radius: 22,
+                        backgroundColor: AppColors.primaryLight,
+                        child: Text(
+                          initial,
+                          style: AppTypography.titleMedium.copyWith(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        widget.appointment.patientPhone,
-                        style: AppTypography.bodySmall,
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.appointment.patientName,
+                              style: AppTypography.titleMedium.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.phone_outlined,
+                                  size: 13,
+                                  color: AppColors.slateLight,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  widget.appointment.patientPhone,
+                                  style: AppTypography.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  const Divider(height: 16),
+                  const Divider(height: 20),
                   Row(
                     children: [
                       const Icon(
@@ -129,30 +164,46 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
                         size: 14,
                         color: AppColors.primary,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 6),
                       Text(
                         dateFormat.format(widget.appointment.startTime),
                         style: AppTypography.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    '${widget.appointment.serviceName} • ${widget.appointment.doctorName}',
-                    style: AppTypography.bodySmall,
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.medical_services_outlined,
+                        size: 14,
+                        color: AppColors.slateLight,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${widget.appointment.serviceName} • ${widget.appointment.doctorName}',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.slateLight,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.lg),
 
             // Status Selector
             Text(
               'Randevu Durumu',
-              style: AppTypography.labelMedium.copyWith(fontWeight: FontWeight.bold),
+              style: AppTypography.labelMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Wrap(
@@ -171,8 +222,8 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
                   ),
                   labelStyle: TextStyle(
                     color: isSelected ? status.color : AppColors.textSecondary,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 12.5,
                   ),
                   onSelected: (selected) {
                     if (selected) {
@@ -185,7 +236,7 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
               }).toList(),
             ),
 
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.lg),
 
             // Clinical Note Editor
             AppTextField(
@@ -195,7 +246,7 @@ class _AppointmentDetailSheetState extends State<AppointmentDetailSheet> {
               maxLines: 3,
             ),
 
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
 
             AppButton(
               text: 'Değişiklikleri Kaydet',

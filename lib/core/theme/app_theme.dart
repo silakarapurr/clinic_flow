@@ -78,11 +78,29 @@ class AppTheme {
         selectedLabelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
         unselectedLabelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
         type: BottomNavigationBarType.fixed,
-        elevation: 8,
+        elevation: 0,
+      ),
+      dialogTheme: const DialogTheme(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.roundedXl,
+          side: BorderSide(color: AppColors.border, width: 1.0),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: AppRadius.roundedFull,
+          side: BorderSide(color: AppColors.border, width: 1.0),
+        ),
+        labelStyle: AppTypography.labelSmall,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.border,
-        thickness: 1,
+        thickness: 0.8,
         space: 1,
       ),
     );

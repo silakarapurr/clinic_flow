@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/di/injection.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
 import '../../features/appointments/presentation/cubit/appointments_cubit.dart';
 import '../../features/appointments/presentation/views/appointments_calendar_view.dart';
 import '../../features/appointments/presentation/views/create_appointment_dialog.dart';
@@ -60,6 +63,17 @@ class _MainShellViewState extends State<MainShellView> {
     );
   }
 
+  void _onTabSelected(int index) {
+    if (_currentIndex == index) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _currentIndex = index;
+    });
+    if (index == 0) {
+      context.read<DashboardCubit>().loadDashboard();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -68,6 +82,34 @@ class _MainShellViewState extends State<MainShellView> {
       const PatientsListView(),
       const DoctorsListView(),
       const SettingsView(),
+    ];
+
+    final navItems = [
+      (
+        icon: Icons.grid_view_outlined,
+        activeIcon: Icons.grid_view_rounded,
+        label: AppStrings.dashboard,
+      ),
+      (
+        icon: Icons.calendar_today_outlined,
+        activeIcon: Icons.calendar_today_rounded,
+        label: AppStrings.appointments,
+      ),
+      (
+        icon: Icons.people_outline_rounded,
+        activeIcon: Icons.people_rounded,
+        label: AppStrings.patients,
+      ),
+      (
+        icon: Icons.medical_services_outlined,
+        activeIcon: Icons.medical_services_rounded,
+        label: 'Hekimler',
+      ),
+      (
+        icon: Icons.tune_outlined,
+        activeIcon: Icons.tune_rounded,
+        label: AppStrings.settings,
+      ),
     ];
 
     return BlocListener<AuthCubit, AuthState>(
@@ -86,45 +128,81 @@ class _MainShellViewState extends State<MainShellView> {
           index: _currentIndex,
           children: screens,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-            // Refresh dashboard data when navigating to dashboard tab
-            if (index == 0) {
-              context.read<DashboardCubit>().loadDashboard();
-            }
-          },
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard_rounded),
-              label: AppStrings.dashboard,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            border: Border(
+              top: BorderSide(
+                color: AppColors.border.withValues(alpha: 0.8),
+                width: 0.8,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today_outlined),
-              activeIcon: Icon(Icons.calendar_today_rounded),
-              label: AppStrings.appointments,
+            boxShadow: AppShadows.floatingBar,
+          ),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 64,
+              child: Row(
+                children: List.generate(navItems.length, (index) {
+                  final item = navItems[index];
+                  final isSelected = _currentIndex == index;
+
+                  return Expanded(
+                    child: InkWell(
+                      onTap: () => _onTabSelected(index),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      child: Center(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOutCubic,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSelected ? 12 : 8,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.primaryLight.withValues(alpha: 0.6)
+                                : Colors.transparent,
+                            borderRadius: AppRadius.roundedFull,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isSelected ? item.activeIcon : item.icon,
+                                size: 22,
+                                color: isSelected
+                                    ? AppColors.primaryDark
+                                    : AppColors.slateLight,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                item.label,
+                                style: TextStyle(
+                                  fontSize: 10.5,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? AppColors.primaryDark
+                                      : AppColors.slateLight,
+                                  letterSpacing: -0.1,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline_rounded),
-              activeIcon: Icon(Icons.people_rounded),
-              label: AppStrings.patients,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.medical_services_outlined),
-              activeIcon: Icon(Icons.medical_services_rounded),
-              label: 'Hekimler',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              activeIcon: Icon(Icons.settings_rounded),
-              label: AppStrings.settings,
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -68,4 +68,11 @@ class AppTypography {
     letterSpacing: 0.2,
     color: AppColors.textSecondary,
   );
+
+  static const TextStyle statNumber = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.6,
+    color: AppColors.textPrimary,
+  );
 }

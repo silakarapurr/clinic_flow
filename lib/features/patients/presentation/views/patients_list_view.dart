@@ -53,18 +53,49 @@ class _PatientsListViewState extends State<PatientsListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(AppStrings.patients, style: AppTypography.titleLarge),
+        titleSpacing: AppSpacing.lg,
+        title: const Text(
+          AppStrings.patients,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.5,
+            color: AppColors.textPrimary,
+          ),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.md),
-            child: IconButton.filled(
-              onPressed: _openCreatePatient,
-              icon: const Icon(Icons.person_add_alt_1_rounded, size: 20),
-              tooltip: AppStrings.newPatient,
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+            padding: const EdgeInsets.only(right: AppSpacing.lg),
+            child: InkWell(
+              onTap: _openCreatePatient,
+              borderRadius: AppRadius.roundedFull,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: AppRadius.roundedFull,
+                  boxShadow: AppShadows.primaryGlow,
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.person_add_rounded, size: 18, color: Colors.white),
+                    SizedBox(width: 4),
+                    Text(
+                      'Yeni Hasta',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -72,19 +103,34 @@ class _PatientsListViewState extends State<PatientsListView> {
       ),
       body: Column(
         children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
+          // Search Bar & Counter Header
+          Container(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.xs,
+              AppSpacing.lg,
+              AppSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              border: Border(
+                bottom: BorderSide(
+                  color: AppColors.border.withValues(alpha: 0.8),
+                  width: 0.8,
+                ),
+              ),
             ),
             child: AppTextField(
               hint: AppStrings.searchPatient,
               controller: _searchController,
-              prefixIcon: const Icon(Icons.search_rounded, size: 20),
+              prefixIcon: const Icon(
+                Icons.search_rounded,
+                size: 20,
+                color: AppColors.slateLight,
+              ),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear, size: 18),
+                      icon: const Icon(Icons.clear_rounded, size: 18),
                       onPressed: () {
                         _searchController.clear();
                         context.read<PatientsCubit>().loadPatients();
@@ -141,6 +187,10 @@ class _PatientsListViewState extends State<PatientsListView> {
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final patient = state.patients[index];
+                      final initial = patient.fullName.isNotEmpty
+                          ? patient.fullName[0].toUpperCase()
+                          : 'H';
+
                       return AppCard(
                         onTap: () {
                           Navigator.of(context).push(
@@ -151,17 +201,17 @@ class _PatientsListViewState extends State<PatientsListView> {
                           );
                         },
                         padding: const EdgeInsets.all(AppSpacing.md),
+                        borderRadius: AppRadius.roundedLg,
                         child: Row(
                           children: [
                             CircleAvatar(
                               radius: 22,
                               backgroundColor: AppColors.primaryLight,
                               child: Text(
-                                patient.fullName.isNotEmpty
-                                    ? patient.fullName[0].toUpperCase()
-                                    : 'H',
+                                initial,
                                 style: AppTypography.titleMedium.copyWith(
-                                  color: AppColors.primary,
+                                  color: AppColors.primaryDark,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -170,22 +220,76 @@ class _PatientsListViewState extends State<PatientsListView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    patient.fullName,
-                                    style: AppTypography.titleMedium
-                                        .copyWith(fontSize: 16),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          patient.fullName,
+                                          style: AppTypography.titleMedium.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (patient.notes != null &&
+                                          patient.notes!.isNotEmpty) ...[
+                                        const SizedBox(width: 6),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.statusScheduledBg,
+                                            borderRadius: AppRadius.roundedFull,
+                                          ),
+                                          child: Text(
+                                            'Not Var',
+                                            style: AppTypography.labelSmall.copyWith(
+                                              color: AppColors.statusScheduled,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    patient.phone,
-                                    style: AppTypography.bodySmall,
+                                  const SizedBox(height: 3),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.phone_outlined,
+                                        size: 13,
+                                        color: AppColors.slateLight,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        patient.phone,
+                                        style: AppTypography.bodySmall.copyWith(
+                                          color: AppColors.slateLight,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                            const Icon(
-                              Icons.chevron_right_rounded,
-                              color: AppColors.slateMuted,
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: AppColors.borderSubtle,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.chevron_right_rounded,
+                                size: 18,
+                                color: AppColors.slateMuted,
+                              ),
                             ),
                           ],
                         ),

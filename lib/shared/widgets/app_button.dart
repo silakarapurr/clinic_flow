@@ -43,7 +43,7 @@ class AppButton extends StatelessWidget {
       AppButtonVariant.outline => (
           Colors.transparent,
           AppColors.slateDark,
-          const BorderSide(color: AppColors.border, width: 1.2)
+          BorderSide(color: AppColors.border, width: 1.2)
         ),
       AppButtonVariant.danger => (
           AppColors.error,
@@ -52,15 +52,52 @@ class AppButton extends StatelessWidget {
         ),
     };
 
-    return SizedBox(
+    final isPrimary = variant == AppButtonVariant.primary;
+    final isEnabled = !isLoading && onPressed != null;
+
+    Widget buttonChild = isLoading
+        ? SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.2,
+              valueColor: AlwaysStoppedAnimation<Color>(fgColor),
+            ),
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 18, color: fgColor),
+                const SizedBox(width: AppSpacing.sm),
+              ],
+              Text(
+                text,
+                style: AppTypography.labelLarge.copyWith(
+                  color: fgColor,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ],
+          );
+
+    return Container(
       width: width ?? double.infinity,
       height: height,
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.roundedMd,
+        gradient: isPrimary && isEnabled ? AppColors.primaryGradient : null,
+        boxShadow: isPrimary && isEnabled ? AppShadows.primaryGlow : null,
+      ),
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
+          backgroundColor: isPrimary && isEnabled ? Colors.transparent : bgColor,
           foregroundColor: fgColor,
-          disabledBackgroundColor: AppColors.slateLight.withValues(alpha: 0.3),
+          shadowColor: Colors.transparent,
+          disabledBackgroundColor: AppColors.slateLight.withValues(alpha: 0.25),
           disabledForegroundColor: Colors.white70,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -69,29 +106,7 @@ class AppButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         ),
-        child: isLoading
-            ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.2,
-                  valueColor: AlwaysStoppedAnimation<Color>(fgColor),
-                ),
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 18, color: fgColor),
-                    const SizedBox(width: AppSpacing.sm),
-                  ],
-                  Text(
-                    text,
-                    style: AppTypography.labelLarge.copyWith(color: fgColor),
-                  ),
-                ],
-              ),
+        child: buttonChild,
       ),
     );
   }
