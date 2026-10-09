@@ -22,7 +22,7 @@ class SeedData {
     id: 'u101-user-001',
     clinicId: clinicId,
     fullName: 'Dr. Zeynep Kaya',
-    email: 'zeynep@clinicflow.com',
+    email: 'dr.zeynep@clinicflow.com',
     role: UserRole.admin,
   );
 

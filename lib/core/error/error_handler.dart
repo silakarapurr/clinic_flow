@@ -67,7 +67,11 @@ class ErrorHandler {
       'too-many-requests' =>
         'Çok fazla başarısız deneme yapıldı. Lütfen biraz bekleyin.',
       'network-request-failed' => AppStrings.networkError,
-      _ => AppStrings.authInvalidCredentials,
+      'configuration-not-found' ||
+      'operation-not-allowed' ||
+      'api-key-not-valid' =>
+        'Kimlik doğrulama servisi henüz yapılandırılmamış veya devre dışı.',
+      _ => AppStrings.genericError,
     };
   }
 
